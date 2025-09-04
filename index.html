@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediksi Lotre</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 400px;
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(to right, #2c3e50, #4ca1af);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+        
+        .content {
+            padding: 20px;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            text-align: center;
+        }
+        
+        .divider {
+            height: 2px;
+            background-color: #eee;
+            margin: 20px 0;
+        }
+        
+        button {
+            background: linear-gradient(to right, #2c3e50, #4ca1af);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 10px;
+            transition: transform 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .result-section {
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .result-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .result {
+            padding: 30px;
+            border-radius: 10px;
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-align: center;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+        
+        .besar {
+            background-color: #ff6b6b;
+            color: white;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.5);
+        }
+        
+        .kecil {
+            background-color: #4ecdc4;
+            color: white;
+            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.5);
+        }
+        
+        .warning-note {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 4px;
+        }
+        
+        .warning-title {
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .warning-icon {
+            margin-right: 8px;
+            font-size: 1.2rem;
+        }
+        
+        .warning-text {
+            color: #856404;
+            font-size: 0.9rem;
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Prediksi Lotre</h1>
+            <p>By : Ichal</p>
+        </header>
+        
+        <div class="content">
+            <div class="input-group">
+                <label for="dividend"></label>
+                <input type="number" id="dividend" min="0" value="">
+            </div>
+            
+            <div class="input-group">
+                <label for="divisor"></label>
+                <input type="number" id="divisor" min="1" value="">
+            </div>
+            
+            <div class="divider"></div>
+            
+            <button id="calculateBtn">HASIL PREDIKSI</button>
+            
+            <div id="resultContainer" class="hidden">
+                <div class="result-title">HASIL PREDIKSI</div>
+                <div class="result" id="predictionResult">BESAR</div>
+            </div>
+            
+            <!-- Catatan Peringatan -->
+            <div class="warning-note">
+                <div class="warning-title">
+                    <span class="warning-icon">⚠️</span>
+                    Peringatan Penting
+                </div>
+                <div class="warning-text">
+                    Jika angka 1 muncul dalam trend permainan, disarankan untuk tidak mengikuti prediksi ini dan melewati putaran tersebut.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const calculateBtn = document.getElementById('calculateBtn');
+            const resultContainer = document.getElementById('resultContainer');
+            const predictionResult = document.getElementById('predictionResult');
+            
+            calculateBtn.addEventListener('click', function() {
+                // Sembunyikan hasil sebelumnya
+                resultContainer.classList.add('hidden');
+                
+                // Ambil nilai input
+                const dividend = parseInt(document.getElementById('dividend').value);
+                const divisor = parseInt(document.getElementById('divisor').value);
+                
+                // Validasi input
+                if (isNaN(dividend) || isNaN(divisor)) {
+                    alert('Masukkan angka yang valid!');
+                    return;
+                }
+                
+                if (divisor === 0) {
+                    alert('Pembagi tidak boleh nol!');
+                    return;
+                }
+                
+                // Hitung pembagian
+                const result = dividend / divisor;
+                
+                // Cari angka di belakang koma
+                let decimalNumber;
+                if (Number.isInteger(result)) {
+                    // Jika hasilnya bilangan bulat, ambil digit terakhir
+                    const resultStr = result.toString();
+                    decimalNumber = parseInt(resultStr[resultStr.length - 1]);
+                } else {
+                    // Jika hasilnya desimal, ambil angka pertama di belakang koma
+                    const resultStr = result.toString();
+                    const decimalIndex = resultStr.indexOf('.');
+                    decimalNumber = parseInt(resultStr[decimalIndex + 1]);
+                }
+                
+                // Tentukan prediksi
+                let prediction;
+                let predictionClass;
+                
+                if (decimalNumber >= 5 && decimalNumber <= 9) {
+                    prediction = "BESAR";
+                    predictionClass = "besar";
+                } else {
+                    prediction = "KECIL";
+                    predictionClass = "kecil";
+                }
+                
+                // Tampilkan hasil prediksi
+                predictionResult.textContent = prediction;
+                predictionResult.className = "result " + predictionClass;
+                
+                // Tampilkan container hasil
+                resultContainer.classList.remove('hidden');
+            });
+        });
+    </script>
+</body>
+</html>
